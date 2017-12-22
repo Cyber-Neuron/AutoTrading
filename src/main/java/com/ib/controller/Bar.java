@@ -1,0 +1,65 @@
+/* Copyright (C) 2013 Interactive Brokers LLC. All rights reserved.  This code is subject to the terms
+ * and conditions of the IB API Non-Commercial License or the IB API Commercial License, as applicable. */
+
+package com.ib.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Bar {
+	private static final SimpleDateFormat FORMAT = new SimpleDateFormat( "yyyyMMdd HH:mm:ss"); // format for historical query
+
+	public long m_time;
+	public double m_high;
+	public double m_low;
+	public double m_open;
+	public double m_close;
+	public double m_wap;
+	public long m_volume;
+	public int m_count;
+	public boolean isAvg=false;
+	public long time()		{ return m_time; }
+	public double high() 	{ return m_high; }
+	public double low() 	{ return m_low; }
+	public double open() 	{ return m_open; }
+	public double close() 	{ return m_close; }
+	public double wap() 	{ return m_wap; }
+	public long volume() 	{ return m_volume; }
+	public int count() 		{ return m_count; }
+
+	public Bar( long time, double high, double low, double open, double close, double wap, long volume, int count) {
+		m_time = time;
+		m_high = high;
+		m_low = low;
+		m_open = open;
+		m_close = close;
+		m_wap = wap;
+		m_volume = volume;
+		m_count = count;
+	}
+	private double shorten(double d){
+		 d = Double.parseDouble(String.format("%.3f", d));
+		 return d;
+	}
+	public void format_nums(){
+		m_high = shorten(m_high);
+		m_low = shorten(m_low);
+		m_open = shorten(m_open);
+		m_close = shorten(m_close);
+		m_wap = shorten(m_wap);
+		m_volume = (long) shorten((double)m_volume);
+		m_count = (int) shorten((double)m_count);
+	}
+	public String formattedTime() {
+		return Formats.fmtDate( m_time);
+	}
+
+	/** Format for query. */
+	public static String format( long ms) {
+		return FORMAT.format( new Date( ms) );
+	}
+
+	@Override public String toString() {
+		return String.format( "%s %s %s %s %s", formattedTime(), m_open, m_high, m_low, m_close);
+	}
+}
